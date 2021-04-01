@@ -47,11 +47,11 @@ class EkhoBuilder(base: LiteralText, method: EkhoBuilder.() -> Unit) {
 
 class StyleBuilder(private val parentStyle: Style) {
     private var color: TextColor? = null
-    private var bold: Boolean? = null
-    private var italic: Boolean? = null
-    private var underlined: Boolean? = null
-    private var strikethrough: Boolean? = null
-    private var obfuscated: Boolean? = null
+    private var isBold: Boolean? = null
+    private var isItalic: Boolean? = null
+    private var isUnderlined: Boolean? = null
+    private var isStrikethrough: Boolean? = null
+    private var isObfuscated: Boolean? = null
     private var clickEvent: ClickEvent? = null
     private var hoverEvent: HoverEvent? = null
 
@@ -88,13 +88,15 @@ class StyleBuilder(private val parentStyle: Style) {
     val white
         get() = colorByCode(Formatting.WHITE)
 
-
-
-    private fun colorByCode(formatting: Formatting): Formatting {
+    private fun colorByCode(formatting: Formatting) {
         this.color = TextColor.fromFormatting(formatting)
-        return formatting
     }
 
+    /**
+     * Allows for rgb color codes. For default Minecraft colors, just type the Minecraft color name (red, aqua, etc.)
+     *
+     * @param method be sure that this method returns an int like `0xFF00FF` for proper parsing
+     */
     fun color(method: StyleBuilder.() -> Int) {
         this.color = TextColor.fromRgb(method()) ?: run {
             println("[Ekho] Error parsing color '${method()}' from rgb, defaulting to white")
@@ -102,25 +104,30 @@ class StyleBuilder(private val parentStyle: Style) {
         }
     }
 
-    fun bold(method: StyleBuilder.() -> Boolean) {
-        this.bold = method()
-    }
+    val bold
+        get() = run { this.isBold = true }
+    val noBold
+        get() = run { this.isBold = false }
 
-    fun italic(method: StyleBuilder.() -> Boolean) {
-        this.italic = method()
-    }
+    val italics
+        get() = run { this.isItalic = true }
+    val noItalics
+        get() = run { this.isItalic = false }
 
-    fun underlined(method: StyleBuilder.() -> Boolean) {
-        this.underlined = method()
-    }
+    val underline
+        get() = run { this.isUnderlined = true }
+    val noUnderline
+        get() = run { this.isUnderlined = false }
 
-    fun strikethrough(method: StyleBuilder.() -> Boolean) {
-        this.strikethrough = method()
-    }
+    val strikethrough
+        get() = run { this.isStrikethrough = true }
+    val noStrikethrough
+        get() = run { this.isStrikethrough = false }
 
-    fun obfuscated(method: StyleBuilder.() -> Boolean) {
-        this.obfuscated = method()
-    }
+    val obfuscated
+        get() = run { this.isObfuscated = true }
+    val noObfuscation
+        get() = run { this.isObfuscated = false }
 
     fun clickEvent(method: StyleBuilder.() -> ClickEvent) {
         this.clickEvent = method()
@@ -132,11 +139,11 @@ class StyleBuilder(private val parentStyle: Style) {
 
     fun create(): Style = Style(
         color ?: parentStyle.color,
-        bold ?: parentStyle.isBold,
-        italic ?: parentStyle.isItalic,
-        underlined ?: parentStyle.isUnderlined,
-        strikethrough ?: parentStyle.isStrikethrough,
-        obfuscated ?: parentStyle.isObfuscated,
+        isBold ?: parentStyle.isBold,
+        isItalic ?: parentStyle.isItalic,
+        isUnderlined ?: parentStyle.isUnderlined,
+        isStrikethrough ?: parentStyle.isStrikethrough,
+        isObfuscated ?: parentStyle.isObfuscated,
         clickEvent ?: parentStyle.clickEvent,
         hoverEvent ?: parentStyle.hoverEvent,
         null,
