@@ -5,9 +5,13 @@ import kotlin.system.exitProcess
 
 object Common : ModInitializer {
     override fun onInitialize() {
+        // runTests()
+    }
+
+    private fun runTests() {
         testEkho()
 
-        println("\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>>   Common(): testing complete, exiting..")
+        println("\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>>   runTests(): testing complete, exiting..")
         exitProcess(0)
     }
 }

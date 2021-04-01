@@ -3,7 +3,7 @@ package us.spaceclouds42.ekho
 import net.minecraft.text.HoverEvent
 import net.minecraft.text.Text
 
-fun Text.prettyPrint(): String {
+private fun Text.prettyPrint(): String {
     var pretty = ""
 
     pretty += "==Root: '${this.asString()}'"
@@ -27,13 +27,13 @@ fun Text.prettyPrint(): String {
 val testEkho =
 ekho("root ") {
     style {
-        bold { true }
+        bold
         hoverEvent {
             HoverEvent(
                 HoverEvent.Action.SHOW_TEXT,
                 ekho ("hover text") {
                     style {
-                        obfuscated { true }
+                        obfuscated
                     }
                 }
             )
@@ -49,7 +49,7 @@ ekho("root ") {
     // new style (notice inheritance is blocked, so entirely new style is created)
     "string with new style"(false) {
         style {
-            italic { true }
+            italics
             red
         }
         // new style is inherited
@@ -63,7 +63,7 @@ ekho("root ") {
         // overwritten to now be true
         "string that has additional style (inherits and adds)" {
             style {
-                underlined { true }
+                underline
                 green
             }
         }
