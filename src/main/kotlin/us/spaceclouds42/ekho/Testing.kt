@@ -1,5 +1,6 @@
 package us.spaceclouds42.ekho
 
+import net.minecraft.text.HoverEvent
 import net.minecraft.text.Text
 
 fun Text.prettyPrint(): String {
@@ -23,19 +24,25 @@ fun Text.prettyPrint(): String {
     return pretty
 }
 
-val testEkho = ekho("root ") {
+val testEkho =
+ekho("root ") {
     style {
         bold { true }
+        hoverEvent {
+            HoverEvent(
+                HoverEvent.Action.SHOW_TEXT,
+                ekho ("hover text") {
+                    style {
+                        obfuscated { true }
+                    }
+                }
+            )
+        }
     }
 
     // inherits properly
     "hello"()
     newLine
-
-    style {
-        strikethrough { true }
-    }
-
     "world"()
     newLine
 
@@ -43,16 +50,21 @@ val testEkho = ekho("root ") {
     "string with new style"(false) {
         style {
             italic { true }
+            red
         }
         // new style is inherited
         "string that inherits new style"()
-        // cancel inherit works here too
+        // cancel inherit works like this too (will have no style w/o using style { })
         "string that does not inherit"(false)
         newLine
-        // if inherit is true (default), style is
+        // if inherit is true (default), style is properly inherited
+        // and each style property can be individually overwritten
+        // here, italic remains true (inherited), and underlined is
+        // overwritten to now be true
         "string that has additional style (inherits and adds)" {
             style {
                 underlined { true }
+                green
             }
         }
     }

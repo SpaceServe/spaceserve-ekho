@@ -55,8 +55,51 @@ class StyleBuilder(private val parentStyle: Style) {
     private var clickEvent: ClickEvent? = null
     private var hoverEvent: HoverEvent? = null
 
+    val black
+        get() = colorByCode(Formatting.BLACK)
+    val darkBlue
+        get() = colorByCode(Formatting.DARK_BLUE)
+    val darkGreen
+        get() = colorByCode(Formatting.DARK_GREEN)
+    val darkAqua
+        get() = colorByCode(Formatting.DARK_AQUA)
+    val darkRed
+        get() = colorByCode(Formatting.DARK_RED)
+    val darkPurple
+        get() = colorByCode(Formatting.DARK_PURPLE)
+    val gold
+        get() = colorByCode(Formatting.GOLD)
+    val gray
+        get() = colorByCode(Formatting.GRAY)
+    val darkGray
+        get() = colorByCode(Formatting.DARK_GRAY)
+    val blue
+        get() = colorByCode(Formatting.DARK_BLUE)
+    val green
+        get() = colorByCode(Formatting.GREEN)
+    val aqua
+        get() = colorByCode(Formatting.AQUA)
+    val red
+        get() = colorByCode(Formatting.RED)
+    val lightPurple
+        get() = colorByCode(Formatting.LIGHT_PURPLE)
+    val yellow
+        get() = colorByCode(Formatting.YELLOW)
+    val white
+        get() = colorByCode(Formatting.WHITE)
+
+
+
+    private fun colorByCode(formatting: Formatting): Formatting {
+        this.color = TextColor.fromFormatting(formatting)
+        return formatting
+    }
+
     fun color(method: StyleBuilder.() -> Int) {
-        this.color = TextColor.fromRgb(method()) ?: TextColor.fromFormatting(Formatting.WHITE)
+        this.color = TextColor.fromRgb(method()) ?: run {
+            println("[Ekho] Error parsing color '${method()}' from rgb, defaulting to white")
+            TextColor.fromFormatting(Formatting.WHITE)
+        }
     }
 
     fun bold(method: StyleBuilder.() -> Boolean) {
@@ -99,6 +142,10 @@ class StyleBuilder(private val parentStyle: Style) {
         null,
         Style.DEFAULT_FONT_ID,
     )
+}
+
+enum class EkhoColors(private val formatting: Formatting) {
+
 }
 
 /**
