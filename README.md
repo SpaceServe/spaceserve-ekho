@@ -18,4 +18,4 @@ dependencies {
 
 ### 2. Profit
 
-wiki coming soon:tm:
+#### [Wiki](https://github.com/SpaceClouds42/Ekho/wiki)
