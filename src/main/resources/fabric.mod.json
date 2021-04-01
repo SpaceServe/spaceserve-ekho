@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "ekho",
+  "version": "${version}",
+  "name": "Ekho",
+  "description": "A Kotlin DSL for Minecraft Text",
+  "authors": [
+    "SpaceClouds42"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": "",
+    "issues": ""
+  },
+  "license": "LGPL",
+  "icon": "assets/ekho/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      {
+        "value": "us.spaceclouds42.ekho.Common::INSTANCE"
+      }
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.7.1",
+    "fabric": "*",
+    "fabric-language-kotlin": ">=1.5.0+kotlin.1.4.31",
+    "minecraft": "^1.16.5"
+  }
+}
