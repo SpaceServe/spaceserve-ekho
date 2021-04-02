@@ -1,8 +1,8 @@
 package us.spaceclouds42.ekho
 
 import net.minecraft.entity.EntityType
-import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
+import net.minecraft.text.ClickEvent
 import net.minecraft.text.HoverEvent
 import net.minecraft.text.Text
 import java.util.*
@@ -26,17 +26,6 @@ private fun Text.prettyPrint(): String {
     }
 
     return pretty
-}
-
-fun test1() {
-    println("=============< " +
-            "testing start" +
-            " >=============" +
-            "\n\n" +
-            test0_1_0.prettyPrint())
-    println("==============< " +
-            "testing end" +
-            " >==============")
 }
 
 val test0_1_0 =
@@ -85,19 +74,7 @@ val test0_1_0 =
         }
     }
 
-
-fun test2() {
-    println("=============< " +
-            "testing start" +
-            " >=============" +
-            "\n\n" +
-            test0_2_0.prettyPrint())
-    println("==============< " +
-            "testing end" +
-            " >==============")
-}
-
-val test0_2_0 =
+val test0_2_0_hover =
     ekho {
         style { green }
         "show item" {
@@ -127,6 +104,41 @@ val test0_2_0 =
                     name = ekho("player name pls work") {
                         style { gray }
                     }
+                }
+            }
+        }
+    }
+
+val test0_2_0_click =
+    ekho("click testing :D") {
+        style { gold; italics }
+        newLine
+
+        "open url" {
+            style {
+                red
+                clickEvent {
+                    openUrl = "https://github.com/SpaceClouds42/Ekho/wiki/Hover-and-Click-Events"
+                }
+            }
+        }
+        newLine
+
+        "suggest command" {
+            style {
+                blue
+                clickEvent {
+                    suggestCommand = "this text is a suggestion ;)"
+                }
+            }
+        }
+        newLine
+
+        "run command" {
+            style {
+                green
+                clickEvent {
+                    runCommand = "/me command has run :D"
                 }
             }
         }
