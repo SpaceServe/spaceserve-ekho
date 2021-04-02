@@ -8,9 +8,9 @@
     "SpaceClouds42"
   ],
   "contact": {
-    "homepage": "",
-    "sources": "",
-    "issues": ""
+    "homepage": "https://github.com/SpaceClouds42/Ekho/wiki",
+    "sources": "https://github.com/SpaceClouds42/Ekho",
+    "issues": "https://github.com/SpaceClouds42/Ekho/issues"
   },
   "license": "LGPL",
   "icon": "assets/ekho/icon.png",

@@ -5,7 +5,7 @@ import kotlin.system.exitProcess
 
 object Common : ModInitializer {
     override fun onInitialize() {
-        // runTests()
+        runTests()
     }
 
     private fun runTests() {
