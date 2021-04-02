@@ -9,7 +9,7 @@ object Common : ModInitializer {
     }
 
     private fun runTests() {
-        testEkho()
+        test2()
 
         println("\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>>   runTests(): testing complete, exiting..")
         exitProcess(0)

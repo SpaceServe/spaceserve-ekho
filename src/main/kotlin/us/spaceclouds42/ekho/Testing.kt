@@ -1,7 +1,11 @@
 package us.spaceclouds42.ekho
 
+import net.minecraft.entity.EntityType
+import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.text.HoverEvent
 import net.minecraft.text.Text
+import java.util.*
 
 private fun Text.prettyPrint(): String {
     var pretty = ""
@@ -24,59 +28,101 @@ private fun Text.prettyPrint(): String {
     return pretty
 }
 
-val testEkho =
-ekho("root ") {
-    style {
-        bold
-        hoverEvent {
-            HoverEvent(
-                HoverEvent.Action.SHOW_TEXT,
-                ekho ("hover text") {
-                    style {
-                        obfuscated
-                    }
-                }
-            )
-        }
-    }
+fun test1() {
+    println("=============< " +
+            "testing start" +
+            " >=============" +
+            "\n\n" +
+            test0_1_0.prettyPrint())
+    println("==============< " +
+            "testing end" +
+            " >==============")
+}
 
-    // inherits properly
-    "hello"()
-    newLine
-    "world"()
-    newLine
-
-    // new style (notice inheritance is blocked, so entirely new style is created)
-    "string with new style"(false) {
+val test0_1_0 =
+    ekho("root ") {
         style {
-            italics
-            red
+            bold
+            hoverEvent {
+                HoverEvent(
+                    HoverEvent.Action.SHOW_TEXT,
+                    ekho ("hover text") {
+                        style {
+                            obfuscated
+                        }
+                    }
+                )
+            }
         }
-        // new style is inherited
-        "string that inherits new style"()
-        // cancel inherit works like this too (will have no style w/o using style { })
-        "string that does not inherit"(false)
+
+        // inherits properly
+        "hello"()
         newLine
-        // if inherit is true (default), style is properly inherited
-        // and each style property can be individually overwritten
-        // here, italic remains true (inherited), and underlined is
-        // overwritten to now be true
-        "string that has additional style (inherits and adds)" {
+        "world"()
+        newLine
+
+        // new style (notice inheritance is blocked, so entirely new style is created)
+        "string with new style"(false) {
             style {
-                underline
-                green
+                italics
+                red
+            }
+            // new style is inherited
+            "string that inherits new style"()
+            // cancel inherit works like this too (will have no style w/o using style { })
+            "string that does not inherit"(false)
+            newLine
+            // if inherit is true (default), style is properly inherited
+            // and each style property can be individually overwritten
+            // here, italic remains true (inherited), and underlined is
+            // overwritten to now be true
+            "string that has additional style (inherits and adds)" {
+                style {
+                    underline
+                    green
+                }
             }
         }
     }
-}
 
-fun testEkho() {
+
+fun test2() {
     println("=============< " +
-            "testEkho() start" +
+            "testing start" +
             " >=============" +
             "\n\n" +
-            testEkho.prettyPrint())
+            test0_2_0.prettyPrint())
     println("==============< " +
-            "testEkho end" +
+            "testing end" +
             " >==============")
 }
+
+val test0_2_0 =
+    ekho {
+        "show item" {
+            style {
+                itemHover {
+                    item = Items.DIAMOND
+                    count = 1
+                }
+            }
+        }
+        newLine
+        "show text" {
+            style {
+                textHover {
+                    hoverText = ekho("have some hover text :yeef:")
+                }
+            }
+        }
+        newLine
+        "show entity" {
+            style {
+                entityHover {
+                    type = EntityType.COW
+                    uuid = UUID.randomUUID()
+                    name = ekho("name")
+                }
+            }
+        }
+    }

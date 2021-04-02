@@ -1,7 +1,13 @@
 package us.spaceclouds42.ekho
 
+import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityType
+import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.text.*
 import net.minecraft.util.Formatting
+import java.util.*
 
 class EkhoBuilder(base: LiteralText, method: EkhoBuilder.() -> Unit) {
     private var root: MutableText = base
@@ -133,8 +139,32 @@ class StyleBuilder(private val parentStyle: Style) {
         this.clickEvent = method()
     }
 
+    val showText: HoverEvent.Action<Text>
+        get() = HoverEvent.Action.SHOW_TEXT
+    val showItem: HoverEvent.Action<HoverEvent.ItemStackContent>
+        get() = HoverEvent.Action.SHOW_ITEM
+    val showEntity: HoverEvent.Action<HoverEvent.EntityContent>
+        get() = HoverEvent.Action.SHOW_ENTITY
+
+    /**
+     * Only use this if you already have a [HoverEvent] object created,
+     * otherwise use [itemHover], [entityHover], or [textHover] to create
+     * one with ease.
+     */
     fun hoverEvent(method: StyleBuilder.() -> HoverEvent) {
         this.hoverEvent = method()
+    }
+
+    fun itemHover(method: ItemHoverEventBuilder.() -> Unit) {
+        this.hoverEvent = ItemHoverEventBuilder().apply(method).create()
+    }
+
+    fun entityHover(method: EntityHoverEventBuilder.() -> Unit) {
+        this.hoverEvent = EntityHoverEventBuilder().apply(method).create()
+    }
+
+    fun textHover(method: TextHoverEventBuilder.() -> Unit) {
+        this.hoverEvent = TextHoverEventBuilder().apply(method).create()
     }
 
     fun create(): Style = Style(
@@ -151,8 +181,62 @@ class StyleBuilder(private val parentStyle: Style) {
     )
 }
 
-enum class EkhoColors(private val formatting: Formatting) {
+class ItemHoverEventBuilder : HoverEventBuilder() {
+    var itemStack: ItemStack? = null
+    var count: Int? = null
+    var item: Item? = null
+    var tag: CompoundTag? = null
 
+    fun generateItem(): ItemStack {
+        return if (item != null) {
+            ItemStack(item, count ?: 1).let { it.tag = tag; it }
+        } else if (tag != null) {
+            ItemStack.fromTag(tag)
+        } else {
+            ItemStack.EMPTY
+        }
+    }
+
+    override fun create(): HoverEvent {
+        return HoverEvent(
+            HoverEvent.Action.SHOW_ITEM,
+            HoverEvent.ItemStackContent(
+                itemStack ?: generateItem()
+            )
+        )
+    }
+}
+
+class EntityHoverEventBuilder : HoverEventBuilder() {
+    var type: EntityType<out Entity>? = null
+    var uuid: UUID? = null
+    var name: Text? = null
+
+    override fun create(): HoverEvent {
+        return HoverEvent(
+            HoverEvent.Action.SHOW_ENTITY,
+            HoverEvent.EntityContent(
+                type ?: EntityType.COW, // throw MissingPropertyException
+                uuid ?: UUID.randomUUID(), // ^^
+                name,
+            )
+        )
+    }
+}
+
+class TextHoverEventBuilder : HoverEventBuilder() {
+    var hoverText: Text? = null
+
+    override fun create(): HoverEvent {
+        return HoverEvent(
+            HoverEvent.Action.SHOW_TEXT,
+            hoverText ?: ekho() // throw MissingPropertyException
+        )
+    }
+}
+
+abstract class HoverEventBuilder {
+    abstract fun create(): HoverEvent
 }
 
 /**
