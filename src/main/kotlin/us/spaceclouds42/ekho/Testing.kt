@@ -99,6 +99,7 @@ fun test2() {
 
 val test0_2_0 =
     ekho {
+        style { green }
         "show item" {
             style {
                 itemHover {
@@ -111,7 +112,9 @@ val test0_2_0 =
         "show text" {
             style {
                 textHover {
-                    hoverText = ekho("have some hover text :yeef:")
+                    hoverText = ekho("have some hover text :yeef:") {
+                        style { yellow; italics }
+                    }
                 }
             }
         }
@@ -121,7 +124,9 @@ val test0_2_0 =
                 entityHover {
                     type = EntityType.COW
                     uuid = UUID.randomUUID()
-                    name = ekho("name")
+                    name = ekho("name") {
+                        style { gray }
+                    }
                 }
             }
         }
