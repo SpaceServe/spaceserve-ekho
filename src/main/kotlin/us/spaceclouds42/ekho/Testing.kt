@@ -103,8 +103,8 @@ val test0_2_0 =
         "show item" {
             style {
                 itemHover {
-                    item = Items.DIAMOND
-                    count = 1
+                    item = Items.DIAMOND_SHOVEL
+                    count = 3
                 }
             }
         }
@@ -122,9 +122,9 @@ val test0_2_0 =
         "show entity" {
             style {
                 entityHover {
-                    type = EntityType.COW
+                    type = EntityType.PLAYER
                     uuid = UUID.randomUUID()
-                    name = ekho("name") {
+                    name = ekho("player name pls work") {
                         style { gray }
                     }
                 }
