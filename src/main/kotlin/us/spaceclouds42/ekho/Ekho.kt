@@ -187,7 +187,7 @@ class ItemHoverEventBuilder : HoverEventBuilder() {
     var item: Item? = null
     var tag: CompoundTag? = null
 
-    fun generateItem(): ItemStack {
+    private fun generateItem(): ItemStack {
         return if (item != null) {
             ItemStack(item, count ?: 1).let { it.tag = tag; it }
         } else if (tag != null) {
@@ -201,7 +201,7 @@ class ItemHoverEventBuilder : HoverEventBuilder() {
         return HoverEvent(
             HoverEvent.Action.SHOW_ITEM,
             HoverEvent.ItemStackContent(
-                itemStack ?: generateItem()
+                itemStack ?: generateItem(),
             )
         )
     }
@@ -216,10 +216,10 @@ class EntityHoverEventBuilder : HoverEventBuilder() {
         return HoverEvent(
             HoverEvent.Action.SHOW_ENTITY,
             HoverEvent.EntityContent(
-                type ?: EntityType.COW, // throw MissingPropertyException
-                uuid ?: UUID.randomUUID(), // ^^
+                type ?: EntityType.PLAYER,
+                uuid ?: UUID.randomUUID(),
                 name,
-            )
+            ),
         )
     }
 }
@@ -230,7 +230,7 @@ class TextHoverEventBuilder : HoverEventBuilder() {
     override fun create(): HoverEvent {
         return HoverEvent(
             HoverEvent.Action.SHOW_TEXT,
-            hoverText ?: ekho() // throw MissingPropertyException
+            hoverText ?: ekho(),
         )
     }
 }
