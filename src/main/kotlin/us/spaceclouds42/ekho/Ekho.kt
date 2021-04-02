@@ -135,16 +135,9 @@ class StyleBuilder(private val parentStyle: Style) {
     val noObfuscation
         get() = run { this.isObfuscated = false }
 
-    fun clickEvent(method: StyleBuilder.() -> ClickEvent) {
-        this.clickEvent = method()
+    fun clickEvent(method: ClickEventBuilder.() -> Unit) {
+        this.clickEvent = ClickEventBuilder().apply(method).create()
     }
-
-    val showText: HoverEvent.Action<Text>
-        get() = HoverEvent.Action.SHOW_TEXT
-    val showItem: HoverEvent.Action<HoverEvent.ItemStackContent>
-        get() = HoverEvent.Action.SHOW_ITEM
-    val showEntity: HoverEvent.Action<HoverEvent.EntityContent>
-        get() = HoverEvent.Action.SHOW_ENTITY
 
     /**
      * Only use this if you already have a [HoverEvent] object created,
@@ -179,6 +172,11 @@ class StyleBuilder(private val parentStyle: Style) {
         null,
         Style.DEFAULT_FONT_ID,
     )
+}
+
+// Start Hover Events
+abstract class HoverEventBuilder {
+    abstract fun create(): HoverEvent
 }
 
 class ItemHoverEventBuilder : HoverEventBuilder() {
@@ -234,9 +232,31 @@ class TextHoverEventBuilder : HoverEventBuilder() {
         )
     }
 }
+// End Hover Events
 
-abstract class HoverEventBuilder {
-    abstract fun create(): HoverEvent
+class ClickEventBuilder {
+    private var action: ClickEvent.Action? = null
+    private var value: String? = null
+
+    var openUrl: String = ""
+        set(url) = run { action = ClickEvent.Action.OPEN_URL; value = url }
+    var openFile: String = ""
+        set(path) = run { action = ClickEvent.Action.OPEN_FILE; value = path }
+    var runCommand: String = ""
+        set(command) = run { action = ClickEvent.Action.RUN_COMMAND; value = command }
+    var suggestCommand: String = ""
+        set(command) = run { action = ClickEvent.Action.SUGGEST_COMMAND; value = command }
+    var changePage: Int = 0
+        set(page) = run { action = ClickEvent.Action.CHANGE_PAGE; value = page.toString() }
+    var copyToClipboard: String = ""
+        set(copyText) = run { action = ClickEvent.Action.COPY_TO_CLIPBOARD; value = copyText }
+
+    fun create(): ClickEvent {
+        return ClickEvent(
+            action ?: ClickEvent.Action.SUGGEST_COMMAND,
+            value ?: "",
+        )
+    }
 }
 
 /**
