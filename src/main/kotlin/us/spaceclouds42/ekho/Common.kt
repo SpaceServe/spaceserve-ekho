@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
 import net.minecraft.entity.EntityType
 import net.minecraft.server.command.CommandManager
 import net.minecraft.text.HoverEvent
+import net.minecraft.text.TextColor
+import net.minecraft.text.TranslatableText
 
 object Common : ModInitializer {
     override fun onInitialize() {
@@ -85,6 +87,35 @@ object Common : ModInitializer {
                                                 )
                                             )
                                         }
+                                    }
+                                }
+                            },
+                            false
+                        )
+                        1
+                    }
+                    .build()
+            )
+
+            dispatcher.root.addChild(
+                CommandManager
+                    .literal("translationTest")
+                    .executes {
+                        it.source.sendFeedback(
+                            ekhoText(TranslatableText("translation.test.none")) {
+                                newLine
+                                "test"()
+                                newLine
+                                text(
+                                    TranslatableText(
+                                        "translation.test.complex",
+                                        it.source.player.name,
+                                        "robot",
+                                        "fabric"
+                                    )
+                                ) {
+                                    style {
+                                        color = TextColor.fromRgb(0xA4243B)
                                     }
                                 }
                             },
