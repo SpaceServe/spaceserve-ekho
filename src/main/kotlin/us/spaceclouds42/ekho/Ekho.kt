@@ -46,7 +46,7 @@ class EkhoBuilder(base: Text, method: EkhoBuilder.() -> Unit) {
         }
     }
 
-operator fun Text.invoke(inheritStyle: Boolean = true, method: EkhoBuilder.() -> Unit = { }) {
+    operator fun Text.invoke(inheritStyle: Boolean = true, method: EkhoBuilder.() -> Unit = { }) {
         inherit = inheritStyle
         if (method == { }) {
             this.let { it.style = root.style; siblings.add(it) }
