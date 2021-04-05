@@ -5,7 +5,6 @@ import net.minecraft.item.Items
 import net.minecraft.text.ClickEvent
 import net.minecraft.text.HoverEvent
 import net.minecraft.text.Text
-import net.minecraft.text.TextColor
 import java.util.*
 
 private fun Text.prettyPrint(): String {
@@ -112,7 +111,7 @@ val test0_2_0_hover =
 
 val test0_2_0_click =
     ekho("click testing :D") {
-        style { gold; italics; }
+        style { gold; italics }
         newLine
 
         "open url" {
