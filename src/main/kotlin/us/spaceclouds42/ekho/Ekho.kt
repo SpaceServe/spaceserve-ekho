@@ -49,10 +49,10 @@ class EkhoBuilder(base: MutableText, method: EkhoBuilder.() -> Unit) {
 operator fun Text.invoke(inheritStyle: Boolean = true, method: EkhoBuilder.() -> Unit = { }) {
         inherit = inheritStyle
         if (method == { }) {
-this.let { it.style = root.style; siblings.add(it) }
+            this.let { it.style = root.style; siblings.add(it) }
         } else {
             siblings.add(EkhoBuilder(
-this.let { if (inheritStyle) { it.style = root.style }; it },
+                this.let { if (inheritStyle) { it.style = root.style }; it },
                 method
             ).create())
         }
