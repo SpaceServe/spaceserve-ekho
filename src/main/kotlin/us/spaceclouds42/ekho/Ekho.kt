@@ -9,7 +9,7 @@ import net.minecraft.text.*
 import net.minecraft.util.Formatting
 import java.util.*
 
-class EkhoBuilder(base: MutableText, method: EkhoBuilder.() -> Unit) {
+class EkhoBuilder(base: Text, method: EkhoBuilder.() -> Unit) {
     private var root: MutableText = base
     private val siblings = mutableListOf<Text>() 
     private var inherit = true
