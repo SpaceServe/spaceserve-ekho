@@ -181,13 +181,14 @@ abstract class HoverEventBuilder {
 
 class ItemHoverEventBuilder : HoverEventBuilder() {
     var itemStack: ItemStack? = null
-    var count: Int? = null
     var item: Item? = null
     var tag: CompoundTag? = null
 
     private fun generateItem(): ItemStack {
-        return if (item != null) {
-            ItemStack(item, count ?: 1).let { it.tag = tag; it }
+        return if (itemStack != null) {
+            itemStack
+        } else if (item != null) {
+            ItemStack(item, 1).let { it.tag = tag; it }
         } else if (tag != null) {
             ItemStack.fromTag(tag)
         } else {
