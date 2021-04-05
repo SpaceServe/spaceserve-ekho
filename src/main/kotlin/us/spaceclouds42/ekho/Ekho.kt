@@ -287,6 +287,6 @@ fun ekho(base: String = "", method: EkhoBuilder.() -> Unit = { }): Text {
  * @param base the first part of the text, optional, defaults to empty literal text
  * @return a [Text] object
  */
-fun ekhoText(base: MutableText = LiteralText(""), method: EkhoBuilder.() -> Unit = { }): Text {
+fun ekho(base: Text = LiteralText(""), method: EkhoBuilder.() -> Unit = { }): Text {
     return EkhoBuilder(base, method).create()
 }
