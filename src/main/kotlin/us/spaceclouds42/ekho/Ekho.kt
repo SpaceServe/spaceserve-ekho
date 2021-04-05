@@ -64,7 +64,7 @@ operator fun Text.invoke(inheritStyle: Boolean = true, method: EkhoBuilder.() ->
 }
 
 class StyleBuilder(private val parentStyle: Style) {
-    var color: TextColor? = null
+    private var color: TextColor? = null
     private var isBold: Boolean? = null
     private var isItalic: Boolean? = null
     private var isUnderlined: Boolean? = null
