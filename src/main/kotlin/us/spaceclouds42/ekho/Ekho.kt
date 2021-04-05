@@ -9,7 +9,7 @@ import net.minecraft.text.*
 import net.minecraft.util.Formatting
 import java.util.*
 
-class EkhoBuilder(base: LiteralText, method: EkhoBuilder.() -> Unit) {
+class EkhoBuilder(base: Text, method: EkhoBuilder.() -> Unit) {
     private var root: MutableText = base
     private val siblings = mutableListOf<Text>() 
     private var inherit = true
@@ -41,6 +41,18 @@ class EkhoBuilder(base: LiteralText, method: EkhoBuilder.() -> Unit) {
         } else {
             siblings.add(EkhoBuilder(
                 LiteralText(this).let { if (inheritStyle) { it.style = root.style }; it },
+                method
+            ).create())
+        }
+    }
+
+    operator fun Text.invoke(inheritStyle: Boolean = true, method: EkhoBuilder.() -> Unit = { }) {
+        inherit = inheritStyle
+        if (method == { }) {
+            this.let { it.style = root.style; siblings.add(it) }
+        } else {
+            siblings.add(EkhoBuilder(
+                this.let { if (inheritStyle) { it.style = root.style }; it },
                 method
             ).create())
         }
@@ -268,4 +280,14 @@ class ClickEventBuilder {
  */
 fun ekho(base: String = "", method: EkhoBuilder.() -> Unit = { }): Text {
     return EkhoBuilder(LiteralText(base), method).create()
+}
+
+/**
+ * Create a [Text] object using [EkhoBuilder]
+ *
+ * @param base the first part of the text, optional, defaults to empty literal text
+ * @return a [Text] object
+ */
+fun ekho(base: Text = LiteralText(""), method: EkhoBuilder.() -> Unit = { }): Text {
+    return EkhoBuilder(base, method).create()
 }
