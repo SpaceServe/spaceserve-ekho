@@ -75,10 +75,9 @@ val test0_1_0 =
             }
         }
     }
-
 val test0_2_0_hover =
     ekho {
-        style { green }
+        val green = style { green } // style method returns the style object, which can be reused
         "show item" {
             style {
                 itemHover {
@@ -90,12 +89,7 @@ val test0_2_0_hover =
         "show text" {
             style {
                 textHover {
-                    hoverText = ekho("have some hover text :yeef:") {
-                        style {
-                            italics
-                            color = TextColor.fromFormatting(Formatting.YELLOW)
-                        }
-                    }
+                    hoverText = ekho("have some hover text :yeef:") { style = green }
                 }
             }
         }
@@ -147,3 +141,9 @@ val test0_2_0_click =
             }
         }
     }
+
+val styleTest1 = style { green }
+val styleTest2 = ekho {
+    style { blue }
+}
+// yay it worked :>

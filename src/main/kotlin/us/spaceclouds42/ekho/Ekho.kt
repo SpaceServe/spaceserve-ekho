@@ -59,8 +59,14 @@ class EkhoBuilder(base: MutableText, method: EkhoBuilder.() -> Unit) {
         }
     }
 
-    fun style(method: StyleBuilder.() -> Unit) {
-        root.style = StyleBuilder(root.style.let { if (inherit) { it } else { Style.EMPTY } }).apply(method).create()
+    var style: Style = Style.EMPTY
+        set(style) = run { root.style = style }
+
+    fun style(method: StyleBuilder.() -> Unit): Style {
+        return StyleBuilder(root.style.let { if (inherit) { it } else { Style.EMPTY } }).apply(method).create().let {
+            root.style = it
+            it
+        }
     }
 }
 
@@ -266,60 +272,6 @@ class ClickEventBuilder {
     }
 }
 
-abstract class ColorTypes : Number(), Text {
-    override fun getStyle(): Style {
-        TODO("Not yet implemented")
-    }
-
-    override fun asString(): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun getSiblings(): MutableList<Text> {
-        TODO("Not yet implemented")
-    }
-
-    override fun copy(): MutableText {
-        TODO("Not yet implemented")
-    }
-
-    override fun shallowCopy(): MutableText {
-        TODO("Not yet implemented")
-    }
-
-    override fun asOrderedText(): OrderedText {
-        TODO("Not yet implemented")
-    }
-
-    override fun toByte(): Byte {
-        TODO("Not yet implemented")
-    }
-
-    override fun toChar(): Char {
-        TODO("Not yet implemented")
-    }
-
-    override fun toDouble(): Double {
-        TODO("Not yet implemented")
-    }
-
-    override fun toFloat(): Float {
-        TODO("Not yet implemented")
-    }
-
-    override fun toInt(): Int {
-        TODO("Not yet implemented")
-    }
-
-    override fun toLong(): Long {
-        TODO("Not yet implemented")
-    }
-
-    override fun toShort(): Short {
-        TODO("Not yet implemented")
-    }
-}
-
 /**
  * Create a [MutableText] object using [EkhoBuilder]
  *
@@ -339,3 +291,8 @@ fun ekho(base: String = "", method: EkhoBuilder.() -> Unit = { }): MutableText {
 fun ekho(base: Text, method: EkhoBuilder.() -> Unit = { }): MutableText {
     return EkhoBuilder(base as MutableText, method).create()
 }
+
+/**
+ * Creates a [Style] object using [StyleBuilder]
+ */
+fun style(method: StyleBuilder.() -> Unit): Style = StyleBuilder(Style.EMPTY).apply(method).create()
