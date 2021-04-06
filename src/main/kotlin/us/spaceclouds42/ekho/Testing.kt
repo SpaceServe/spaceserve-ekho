@@ -5,6 +5,8 @@ import net.minecraft.item.Items
 import net.minecraft.text.ClickEvent
 import net.minecraft.text.HoverEvent
 import net.minecraft.text.Text
+import net.minecraft.text.TextColor
+import net.minecraft.util.Formatting
 import java.util.*
 
 private fun Text.prettyPrint(): String {
@@ -81,7 +83,6 @@ val test0_2_0_hover =
             style {
                 itemHover {
                     item = Items.DIAMOND_SHOVEL
-                    count = 3
                 }
             }
         }
@@ -90,7 +91,10 @@ val test0_2_0_hover =
             style {
                 textHover {
                     hoverText = ekho("have some hover text :yeef:") {
-                        style { yellow; italics }
+                        style {
+                            italics
+                            color = TextColor.fromFormatting(Formatting.YELLOW)
+                        }
                     }
                 }
             }
@@ -102,7 +106,7 @@ val test0_2_0_hover =
                     type = EntityType.PLAYER
                     uuid = UUID.randomUUID()
                     name = ekho("player name pls work") {
-                        style { gray }
+                        style { rgb = 0xAF9DC7 }
                     }
                 }
             }

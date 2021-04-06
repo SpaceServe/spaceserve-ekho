@@ -1,5 +1,6 @@
 package us.spaceclouds42.ekho
 
+import com.mojang.datafixers.util.Either
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.item.Item
@@ -64,7 +65,7 @@ class EkhoBuilder(base: MutableText, method: EkhoBuilder.() -> Unit) {
 }
 
 class StyleBuilder(private val parentStyle: Style) {
-    private var color: TextColor? = null
+    private var textColor: TextColor? = null
     private var isBold: Boolean? = null
     private var isItalic: Boolean? = null
     private var isUnderlined: Boolean? = null
@@ -106,20 +107,13 @@ class StyleBuilder(private val parentStyle: Style) {
     val white
         get() = colorByCode(Formatting.WHITE)
 
-    private fun colorByCode(formatting: Formatting) {
-        this.color = TextColor.fromFormatting(formatting)
-    }
+    var rgb: Int? = null
+        set(rgb) = run { this.textColor = TextColor.fromRgb(rgb ?: 0x000000) }
+    var color: TextColor? = null
+        set(color) = run { this.textColor = color ?: TextColor.fromRgb(0x000000) }
 
-    /**
-     * Allows for rgb color codes. For default Minecraft colors, just type the Minecraft color name (red, aqua, etc.)
-     *
-     * @param method be sure that this method returns an int like `0xFF00FF` for proper parsing
-     */
-    fun color(method: StyleBuilder.() -> Int) {
-        this.color = TextColor.fromRgb(method()) ?: run {
-            println("[Ekho] Error parsing color '${method()}' from rgb, defaulting to white")
-            TextColor.fromFormatting(Formatting.WHITE)
-        }
+    private fun colorByCode(formatting: Formatting) {
+        this.textColor = TextColor.fromFormatting(formatting)
     }
 
     val bold
@@ -173,7 +167,7 @@ class StyleBuilder(private val parentStyle: Style) {
     }
 
     fun create(): Style = Style(
-        color ?: parentStyle.color,
+        textColor ?: parentStyle.color,
         isBold ?: parentStyle.isBold,
         isItalic ?: parentStyle.isItalic,
         isUnderlined ?: parentStyle.isUnderlined,
@@ -269,6 +263,60 @@ class ClickEventBuilder {
             action ?: ClickEvent.Action.SUGGEST_COMMAND,
             value ?: "",
         )
+    }
+}
+
+abstract class ColorTypes : Number(), Text {
+    override fun getStyle(): Style {
+        TODO("Not yet implemented")
+    }
+
+    override fun asString(): String {
+        TODO("Not yet implemented")
+    }
+
+    override fun getSiblings(): MutableList<Text> {
+        TODO("Not yet implemented")
+    }
+
+    override fun copy(): MutableText {
+        TODO("Not yet implemented")
+    }
+
+    override fun shallowCopy(): MutableText {
+        TODO("Not yet implemented")
+    }
+
+    override fun asOrderedText(): OrderedText {
+        TODO("Not yet implemented")
+    }
+
+    override fun toByte(): Byte {
+        TODO("Not yet implemented")
+    }
+
+    override fun toChar(): Char {
+        TODO("Not yet implemented")
+    }
+
+    override fun toDouble(): Double {
+        TODO("Not yet implemented")
+    }
+
+    override fun toFloat(): Float {
+        TODO("Not yet implemented")
+    }
+
+    override fun toInt(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun toLong(): Long {
+        TODO("Not yet implemented")
+    }
+
+    override fun toShort(): Short {
+        TODO("Not yet implemented")
     }
 }
 
