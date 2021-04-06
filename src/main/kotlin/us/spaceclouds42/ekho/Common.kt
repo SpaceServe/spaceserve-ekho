@@ -4,9 +4,7 @@ import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
 import net.minecraft.entity.EntityType
 import net.minecraft.server.command.CommandManager
-import net.minecraft.text.HoverEvent
-import net.minecraft.text.TextColor
-import net.minecraft.text.TranslatableText
+import net.minecraft.text.*
 
 object Common : ModInitializer {
     override fun onInitialize() {
@@ -15,6 +13,7 @@ object Common : ModInitializer {
 
     private fun runTests() {
         // exitProcess(0)
+        val textObject: MutableText = ekho("yo") as MutableText
         CommandRegistrationCallback.EVENT.register { dispatcher, _ ->
             dispatcher.root.addChild(
                 CommandManager
@@ -102,20 +101,48 @@ object Common : ModInitializer {
                     .literal("translationTest")
                     .executes {
                         it.source.sendFeedback(
-                            ekhoText(TranslatableText("translation.test.none")) {
+                            ekho(TranslatableText("translation.test.none")) {
+                                newLine
+                                "test"()
+                                ekho("ekho") {
+                                    style { bold }
+                                }
+                                newLine
+                                TranslatableText(
+                                    "translation.test.complex",
+                                    it.source.player.name,
+                                    "robot",
+                                    "fabric"
+                                )() {
+                                    style {
+                                        color { 0xA4243B }
+                                    }
+                                }
+                            },
+                            false
+                        )
+                        1
+                    }
+                    .build()
+            )
+
+            dispatcher.root.addChild(
+                CommandManager
+                    .literal("translationTest")
+                    .executes {
+                        it.source.sendFeedback(
+                            ekho(TranslatableText("translation.test.none")) {
                                 newLine
                                 "test"()
                                 newLine
-                                text(
-                                    TranslatableText(
-                                        "translation.test.complex",
-                                        it.source.player.name,
-                                        "robot",
-                                        "fabric"
-                                    )
-                                ) {
+                                TranslatableText(
+                                    "translation.test.complex",
+                                    it.source.player.name,
+                                    "robot",
+                                    "fabric"
+                                )() {
                                     style {
-                                        color = TextColor.fromRgb(0xA4243B)
+                                        color { 0xA4243B }
                                     }
                                 }
                             },

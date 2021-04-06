@@ -9,13 +9,13 @@ import net.minecraft.text.*
 import net.minecraft.util.Formatting
 import java.util.*
 
-class EkhoBuilder(base: Text, method: EkhoBuilder.() -> Unit) {
-    private var root: MutableText = base
-    private val siblings = mutableListOf<Text>() 
+class EkhoBuilder(base: MutableText, method: EkhoBuilder.() -> Unit) {
+    private var root = base
+    private val siblings = mutableListOf<Text>()
     private var inherit = true
 
     /**
-     * Inserts a new line in the resulting [Text] object
+     * Inserts a new line in the resulting [MutableText] object
      */
     val newLine
         get() = run { siblings.add(LiteralText("\n")); "\n" }
@@ -25,11 +25,11 @@ class EkhoBuilder(base: Text, method: EkhoBuilder.() -> Unit) {
     }
 
     /**
-     * Creates the final [Text] object from all the inputs
+     * Creates the final [MutableText] object from all the inputs
      *
-     * @return finalized [Text] object
+     * @return finalized [MutableText] object
      */
-    fun create(): Text {
+    fun create(): MutableText {
         siblings.forEach { root.append(it) }
         return root
     }
@@ -37,7 +37,7 @@ class EkhoBuilder(base: Text, method: EkhoBuilder.() -> Unit) {
     operator fun String.invoke(inheritStyle: Boolean = true, method: EkhoBuilder.() -> Unit = { }) {
         inherit = inheritStyle
         if (method == { }) {
-            LiteralText(this).let { it.style = root.style; siblings.add(it) }
+            LiteralText(this).run { this.style = root.style; siblings.add(this) }
         } else {
             siblings.add(EkhoBuilder(
                 LiteralText(this).let { if (inheritStyle) { it.style = root.style }; it },
@@ -46,10 +46,10 @@ class EkhoBuilder(base: Text, method: EkhoBuilder.() -> Unit) {
         }
     }
 
-    operator fun Text.invoke(inheritStyle: Boolean = true, method: EkhoBuilder.() -> Unit = { }) {
+    operator fun MutableText.invoke(inheritStyle: Boolean = true, method: EkhoBuilder.() -> Unit = { }) {
         inherit = inheritStyle
         if (method == { }) {
-            this.let { it.style = root.style; siblings.add(it) }
+            this.run { this.style = root.style; siblings.add(this) }
         } else {
             siblings.add(EkhoBuilder(
                 this.let { if (inheritStyle) { it.style = root.style }; it },
@@ -198,7 +198,7 @@ class ItemHoverEventBuilder : HoverEventBuilder() {
 
     private fun generateItem(): ItemStack {
         return if (itemStack != null) {
-            itemStack
+            itemStack!!
         } else if (item != null) {
             ItemStack(item, 1).let { it.tag = tag; it }
         } else if (tag != null) {
@@ -273,21 +273,21 @@ class ClickEventBuilder {
 }
 
 /**
- * Create a [Text] object using [EkhoBuilder]
+ * Create a [MutableText] object using [EkhoBuilder]
  *
  * @param base the first part of the text, optional, defaults to empty string
- * @return a [Text] object
+ * @return a [MutableText] object
  */
-fun ekho(base: String = "", method: EkhoBuilder.() -> Unit = { }): Text {
+fun ekho(base: String = "", method: EkhoBuilder.() -> Unit = { }): MutableText {
     return EkhoBuilder(LiteralText(base), method).create()
 }
 
 /**
- * Create a [Text] object using [EkhoBuilder]
+ * Create a [MutableText] object using [EkhoBuilder]
  *
  * @param base the first part of the text, optional, defaults to empty literal text
- * @return a [Text] object
+ * @return a [MutableText] object
  */
-fun ekho(base: Text = LiteralText(""), method: EkhoBuilder.() -> Unit = { }): Text {
-    return EkhoBuilder(base, method).create()
+fun ekho(base: Text, method: EkhoBuilder.() -> Unit = { }): MutableText {
+    return EkhoBuilder(base as MutableText, method).create()
 }
