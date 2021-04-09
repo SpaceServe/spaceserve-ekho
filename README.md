@@ -11,8 +11,8 @@ repositories {
 
 dependencies {
     // Ekho
-    modImplementation "com.github.SpaceClouds42:Ekho:0.2.0"
-    include "com.github.SpaceClouds42:Ekho:0.2.0"
+    modImplementation "com.github.SpaceClouds42:Ekho:0.3.0"
+    include "com.github.SpaceClouds42:Ekho:0.3.0"
 }
 ```
 
