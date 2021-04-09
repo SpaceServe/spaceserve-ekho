@@ -2,99 +2,68 @@ package us.spaceclouds42.ekho
 
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
-import net.minecraft.entity.EntityType
 import net.minecraft.server.command.CommandManager
-import net.minecraft.text.HoverEvent
+import net.minecraft.text.*
+import kotlin.system.exitProcess
 
 object Common : ModInitializer {
     override fun onInitialize() {
-        // runTests()
+        val launchGame = false // set to true to test with in game command, else it's a console test
+        // runTests(launchGame)
     }
 
-    private fun runTests() {
-        // exitProcess(0)
-        CommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            dispatcher.root.addChild(
-                CommandManager
-                    .literal("clickTest")
-                    .executes {
-                        it.source.sendFeedback(test0_2_0_click, false); 1
-                    }
-                    .build()
-            )
-            dispatcher.root.addChild(
-                CommandManager
-                    .literal("runTest2")
-                    .executes {
-                        it.source.sendFeedback(test0_2_0_hover, false)
-                        1
-                    }
-                    .build()
-            )
+    private fun runTests(launchGame: Boolean) {
+        val tests = listOf(
+            ekho("test ekho") {
+                style { blue }
+                "with components"()
+                LiteralText("of all kinds")(false) {
+                    style { bold }
+                }
+            },
+            // add more tests below as needed
+        )
 
-            dispatcher.root.addChild(
-                CommandManager
-                    .literal("displayItem")
-                    .executes {
-                        it.source.sendFeedback(
-                            ekho("Displaying item: ") {
-                                style { yellow }
-                                "THE ITEM" {
-                                    style {
-                                        red; bold; underline; italics
-                                        itemHover {
-                                            itemStack = it.source.player.mainHandStack
-                                        }
-                                    }
-                                }
-                            },
-                            false
-                        )
-                        1
-                    }
-                    .build()
-            )
-
-            dispatcher.root.addChild(
-                CommandManager
-                    .literal("displayEntity")
-                    .executes {
-                        it.source.sendFeedback(
-                            ekho("Displaying entity: ") {
-                                style { yellow }
-                                "THE ENTITY" {
-                                    style {
-                                        red; bold; underline; italics
-                                        entityHover {
-                                            type = EntityType.PLAYER
-                                            uuid = it.source.player.uuid
-                                            name = it.source.player.displayName
-                                        }
-                                    }
-                                }
-                                newLine
-                                "standard hover event" {
-                                    style {
-                                        hoverEvent {
-                                            HoverEvent(
-                                                HoverEvent.Action.SHOW_ENTITY,
-                                                HoverEvent.EntityContent(
-                                                    EntityType.PLAYER,
-                                                    it.source.player.uuid,
-                                                    it.source.player.displayName,
-                                                )
-                                            )
-                                        }
-                                    }
-                                }
-                            },
-                            false
-                        )
-                        1
-                    }
-                    .build()
-            )
+        if (!launchGame) {
+            tests.forEach { println("\n${it.uglyPrint()}") }
+            exitProcess(0)
         }
+
+        CommandRegistrationCallback.EVENT.register { dispatcher, _ ->
+            for (i in 0..tests.size) {
+                dispatcher.root.addChild(
+                    CommandManager
+                        .literal("testEkho${i + 1}")
+                        .executes {
+                            it.source.sendFeedback(ekho("running test ekho ${i + 1}"), false)
+                            it.source.sendFeedback(tests[i], false)
+                            1
+                        }
+                        .build()
+                )
+            }
+        }
+    }
+
+    private fun Text.uglyPrint(): String {
+        var ugly = ""
+
+        ugly += "==Root: '${this.asString()}'"
+        ugly += " STYLED: ${this.style}=="
+        ugly += "\n"
+
+        this.siblings.forEach { text ->
+            if (text.siblings.isNotEmpty()) {
+                ugly += "--Complex component--\n"
+                ugly += "\n${text.uglyPrint()}"
+            } else {
+                ugly += "..Component: '${text.asString().replace("\n", "NEW_LINE")}'"
+                ugly += " STYLED: ${text.style}.."
+                ugly += "\n"
+            }
+        }
+
+        return ugly
     }
 }
 

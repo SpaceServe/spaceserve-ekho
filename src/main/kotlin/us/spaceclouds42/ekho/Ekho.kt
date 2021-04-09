@@ -7,15 +7,15 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.text.*
 import net.minecraft.util.Formatting
-import java.util.*
+import java.util.UUID
 
-class EkhoBuilder(base: LiteralText, method: EkhoBuilder.() -> Unit) {
-    private var root: MutableText = base
-    private val siblings = mutableListOf<Text>() 
+class EkhoBuilder(base: MutableText, method: EkhoBuilder.() -> Unit) {
+    private var root = base
+    private val siblings = mutableListOf<Text>()
     private var inherit = true
 
     /**
-     * Inserts a new line in the resulting [Text] object
+     * Inserts a new line in the resulting [MutableText] object
      */
     val newLine
         get() = run { siblings.add(LiteralText("\n")); "\n" }
@@ -25,34 +25,48 @@ class EkhoBuilder(base: LiteralText, method: EkhoBuilder.() -> Unit) {
     }
 
     /**
-     * Creates the final [Text] object from all the inputs
+     * Creates the final [MutableText] object from all the inputs
      *
-     * @return finalized [Text] object
+     * @return finalized [MutableText] object
      */
-    fun create(): Text {
+    fun create(): MutableText {
         siblings.forEach { root.append(it) }
         return root
     }
 
     operator fun String.invoke(inheritStyle: Boolean = true, method: EkhoBuilder.() -> Unit = { }) {
-        inherit = inheritStyle
-        if (method == { }) {
-            LiteralText(this).let { it.style = root.style; siblings.add(it) }
-        } else {
-            siblings.add(EkhoBuilder(
+        this@EkhoBuilder.inherit = inheritStyle
+        this@EkhoBuilder.siblings.add(
+            EkhoBuilder(
                 LiteralText(this).let { if (inheritStyle) { it.style = root.style }; it },
                 method
-            ).create())
-        }
+            ).create()
+        )
     }
 
-    fun style(method: StyleBuilder.() -> Unit) {
-        root.style = StyleBuilder(root.style.let { if (inherit) { it } else { Style.EMPTY } }).apply(method).create()
+    operator fun MutableText.invoke(inheritStyle: Boolean = true, method: EkhoBuilder.() -> Unit = { }) {
+        this@EkhoBuilder.inherit = inheritStyle
+        this@EkhoBuilder.siblings.add(
+            EkhoBuilder(
+                LiteralText(this.asString()).let { if (inheritStyle) { it.style = root.style } else { it.style = this.style }; it },
+                method
+            ).create()
+        )
+    }
+
+    var style: Style = Style.EMPTY
+        set(style) = run { root.style = style }
+
+    fun style(method: StyleBuilder.() -> Unit): Style {
+        return StyleBuilder(root.style.let { if (inherit) { it } else { Style.EMPTY } }).apply(method).create().let {
+            root.style = it
+            it
+        }
     }
 }
 
 class StyleBuilder(private val parentStyle: Style) {
-    private var color: TextColor? = null
+    private var textColor: TextColor? = null
     private var isBold: Boolean? = null
     private var isItalic: Boolean? = null
     private var isUnderlined: Boolean? = null
@@ -80,7 +94,7 @@ class StyleBuilder(private val parentStyle: Style) {
     val darkGray
         get() = colorByCode(Formatting.DARK_GRAY)
     val blue
-        get() = colorByCode(Formatting.DARK_BLUE)
+        get() = colorByCode(Formatting.BLUE)
     val green
         get() = colorByCode(Formatting.GREEN)
     val aqua
@@ -94,20 +108,13 @@ class StyleBuilder(private val parentStyle: Style) {
     val white
         get() = colorByCode(Formatting.WHITE)
 
-    private fun colorByCode(formatting: Formatting) {
-        this.color = TextColor.fromFormatting(formatting)
-    }
+    var rgb: Int? = null
+        set(rgb) = run { this.textColor = TextColor.fromRgb(rgb ?: 0x000000) }
+    var color: TextColor? = null
+        set(color) = run { this.textColor = color ?: TextColor.fromRgb(0x000000) }
 
-    /**
-     * Allows for rgb color codes. For default Minecraft colors, just type the Minecraft color name (red, aqua, etc.)
-     *
-     * @param method be sure that this method returns an int like `0xFF00FF` for proper parsing
-     */
-    fun color(method: StyleBuilder.() -> Int) {
-        this.color = TextColor.fromRgb(method()) ?: run {
-            println("[Ekho] Error parsing color '${method()}' from rgb, defaulting to white")
-            TextColor.fromFormatting(Formatting.WHITE)
-        }
+    private fun colorByCode(formatting: Formatting) {
+        this.textColor = TextColor.fromFormatting(formatting)
     }
 
     val bold
@@ -161,7 +168,7 @@ class StyleBuilder(private val parentStyle: Style) {
     }
 
     fun create(): Style = Style(
-        color ?: parentStyle.color,
+        textColor ?: parentStyle.color,
         isBold ?: parentStyle.isBold,
         isItalic ?: parentStyle.isItalic,
         isUnderlined ?: parentStyle.isUnderlined,
@@ -181,13 +188,14 @@ abstract class HoverEventBuilder {
 
 class ItemHoverEventBuilder : HoverEventBuilder() {
     var itemStack: ItemStack? = null
-    var count: Int? = null
     var item: Item? = null
     var tag: CompoundTag? = null
 
     private fun generateItem(): ItemStack {
-        return if (item != null) {
-            ItemStack(item, count ?: 1).let { it.tag = tag; it }
+        return if (itemStack != null) {
+            itemStack!!
+        } else if (item != null) {
+            ItemStack(item, 1).let { it.tag = tag; it }
         } else if (tag != null) {
             ItemStack.fromTag(tag)
         } else {
@@ -260,11 +268,26 @@ class ClickEventBuilder {
 }
 
 /**
- * Create a [Text] object using [EkhoBuilder]
+ * Create a [MutableText] object using [EkhoBuilder]
  *
  * @param base the first part of the text, optional, defaults to empty string
- * @return a [Text] object
+ * @return a [MutableText] object
  */
-fun ekho(base: String = "", method: EkhoBuilder.() -> Unit = { }): Text {
+fun ekho(base: String = "", method: EkhoBuilder.() -> Unit = { }): MutableText {
     return EkhoBuilder(LiteralText(base), method).create()
 }
+
+/**
+ * Create a [MutableText] object using [EkhoBuilder]
+ *
+ * @param base the first part of the text, optional, defaults to empty literal text
+ * @return a [MutableText] object
+ */
+fun ekho(base: Text, method: EkhoBuilder.() -> Unit = { }): MutableText {
+    return EkhoBuilder(base as MutableText, method).create()
+}
+
+/**
+ * Creates a [Style] object using [StyleBuilder]
+ */
+fun style(method: StyleBuilder.() -> Unit): Style = StyleBuilder(Style.EMPTY).apply(method).create()
