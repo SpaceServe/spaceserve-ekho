@@ -1,6 +1,5 @@
 package us.spaceclouds42.ekho
 
-import com.mojang.datafixers.util.Either
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.item.Item
@@ -8,7 +7,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.text.*
 import net.minecraft.util.Formatting
-import java.util.*
+import java.util.UUID
 
 class EkhoBuilder(base: MutableText, method: EkhoBuilder.() -> Unit) {
     private var root = base
@@ -36,27 +35,23 @@ class EkhoBuilder(base: MutableText, method: EkhoBuilder.() -> Unit) {
     }
 
     operator fun String.invoke(inheritStyle: Boolean = true, method: EkhoBuilder.() -> Unit = { }) {
-        inherit = inheritStyle
-        if (method == { }) {
-            LiteralText(this).run { this.style = root.style; siblings.add(this) }
-        } else {
-            siblings.add(EkhoBuilder(
+        this@EkhoBuilder.inherit = inheritStyle
+        this@EkhoBuilder.siblings.add(
+            EkhoBuilder(
                 LiteralText(this).let { if (inheritStyle) { it.style = root.style }; it },
                 method
-            ).create())
-        }
+            ).create()
+        )
     }
 
     operator fun MutableText.invoke(inheritStyle: Boolean = true, method: EkhoBuilder.() -> Unit = { }) {
-        inherit = inheritStyle
-        if (method == { }) {
-            this.run { this.style = root.style; siblings.add(this) }
-        } else {
-            siblings.add(EkhoBuilder(
-                this.let { if (inheritStyle) { it.style = root.style }; it },
+        this@EkhoBuilder.inherit = inheritStyle
+        this@EkhoBuilder.siblings.add(
+            EkhoBuilder(
+                LiteralText(this.asString()).let { if (inheritStyle) { it.style = root.style } else { it.style = this.style }; it },
                 method
-            ).create())
-        }
+            ).create()
+        )
     }
 
     var style: Style = Style.EMPTY
@@ -99,7 +94,7 @@ class StyleBuilder(private val parentStyle: Style) {
     val darkGray
         get() = colorByCode(Formatting.DARK_GRAY)
     val blue
-        get() = colorByCode(Formatting.DARK_BLUE)
+        get() = colorByCode(Formatting.BLUE)
     val green
         get() = colorByCode(Formatting.GREEN)
     val aqua
