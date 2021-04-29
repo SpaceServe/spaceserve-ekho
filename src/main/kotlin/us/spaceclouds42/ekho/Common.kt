@@ -33,7 +33,7 @@ object Common : ModInitializer {
             for (i in 0..tests.size) {
                 dispatcher.root.addChild(
                     CommandManager
-                        .literal("testEkho${i + 1}")
+                        .literal("testekho${i + 1}")
                         .executes {
                             it.source.sendFeedback(ekho("running test ekho ${i + 1}"), false)
                             it.source.sendFeedback(tests[i], false)
