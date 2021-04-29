@@ -11,11 +11,11 @@ repositories {
 
 dependencies {
     // Ekho
-    modImplementation "com.github.SpaceClouds42:Ekho:0.3.0"
-    include "com.github.SpaceClouds42:Ekho:0.3.0"
+    modImplementation "com.github.SpaceServe:Ekho:0.3.0"
+    include "com.github.SpaceServe:Ekho:0.3.0"
 }
 ```
 
 ### 2. Profit
 
-#### [Wiki](https://github.com/SpaceClouds42/Ekho/wiki)
+#### [Wiki](https://github.com/SpaceServe/Ekho/wiki)
