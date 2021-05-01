@@ -1,4 +1,4 @@
-# Ekho
+# Ekho | SpaceServe Text DSL
 
 ## Usage
 
