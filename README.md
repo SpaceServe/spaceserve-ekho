@@ -11,11 +11,11 @@ repositories {
 
 dependencies {
     // Ekho
-    modImplementation "com.github.SpaceServe:ekho:0.3.0"
-    include "com.github.SpaceServe:ekho:0.3.0"
+    modImplementation "com.github.SpaceServe:spaceserve-ekho:0.3.0"
+    include "com.github.SpaceServe:spaceserve-ekho:0.3.0"
 }
 ```
 
 ### 2. Profit
 
-#### [Wiki](https://github.com/SpaceServe/ekho/wiki)
+#### [Wiki](https://github.com/SpaceServe/spaceserve-ekho/wiki)
