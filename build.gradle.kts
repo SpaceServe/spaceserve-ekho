@@ -16,7 +16,6 @@ plugins {
     id("io.gitlab.arturbosch.detekt")
     id("org.jetbrains.dokka")
     kotlin("jvm")
-    `maven-publish`
 }
 
 repositories {

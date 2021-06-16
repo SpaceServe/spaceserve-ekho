@@ -6,15 +6,15 @@
 ```kotlin
 repositories {
     maven { 
-        name = "JitPack"
-        url = uri("https://jitpack.io")
+        name = "Modrinth"
+        url = uri("https://api.modrinth.com/maven")
     }
 }
 
 dependencies {
     // Ekho
-    modImplementation("com.github.SpaceServe:spaceserve-ekho:0.3.2")
-    include("com.github.SpaceServe:spaceserve-ekho:0.3.2")
+    modImplementation("maven.modrinth:ekho:0.3.2")
+    include("maven.modrinth:ekho:0.3.2")
 }
 ```
 ### 2. ???

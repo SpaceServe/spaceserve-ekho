@@ -7,10 +7,14 @@
   "authors": [
     "SpaceClouds42"
   ],
+  "contributors": [
+    "rx (RitikShah)",
+    "Potatoboy (PotatoPresident)"
+  ],
   "contact": {
-    "homepage": "https://github.com/SpaceClouds42/ekho/wiki",
-    "sources": "https://github.com/SpaceClouds42/ekho",
-    "issues": "https://github.com/SpaceClouds42/ekho/issues"
+    "homepage": "https://github.com/SpaceServe/spaceserve-ekho/wiki",
+    "sources": "https://github.com/SpaceServe/spaceserve-ekho",
+    "issues": "https://github.com/SpaceServe/spaceserve-ekho/issues"
   },
   "license": "LGPL-3.0",
   "icon": "assets/ekho/icon.png",

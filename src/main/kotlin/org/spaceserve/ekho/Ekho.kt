@@ -1,4 +1,4 @@
-package us.spaceclouds42.ekho
+package org.spaceserve.ekho
 
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
