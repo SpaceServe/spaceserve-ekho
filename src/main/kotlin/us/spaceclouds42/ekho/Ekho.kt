@@ -4,7 +4,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityType
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.text.*
 import net.minecraft.util.Formatting
 import java.util.UUID
@@ -189,7 +189,7 @@ abstract class HoverEventBuilder {
 class ItemHoverEventBuilder : HoverEventBuilder() {
     var itemStack: ItemStack? = null
     var item: Item? = null
-    var tag: CompoundTag? = null
+    var tag: NbtCompound? = null
 
     private fun generateItem(): ItemStack {
         return if (itemStack != null) {
@@ -197,7 +197,7 @@ class ItemHoverEventBuilder : HoverEventBuilder() {
         } else if (item != null) {
             ItemStack(item, 1).let { it.tag = tag; it }
         } else if (tag != null) {
-            ItemStack.fromTag(tag)
+            ItemStack.fromNbt(tag)
         } else {
             ItemStack.EMPTY
         }

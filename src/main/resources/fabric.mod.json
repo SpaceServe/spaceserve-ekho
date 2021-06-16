@@ -12,21 +12,16 @@
     "sources": "https://github.com/SpaceClouds42/ekho",
     "issues": "https://github.com/SpaceClouds42/ekho/issues"
   },
-  "license": "LGPL",
+  "license": "LGPL-3.0",
   "icon": "assets/ekho/icon.png",
+
   "environment": "*",
-  "entrypoints": {
-    "main": [
-      {
-        "value": "us.spaceclouds42.ekho.Common::INSTANCE"
-      }
-    ]
-  },
+
   "accessWidener": "ekho.accesswidener",
   "depends": {
-    "fabricloader": ">=0.8.0",
+    "fabricloader": ">=0.11.6",
     "fabric": "*",
-    "fabric-language-kotlin": ">=1.5.0+kotlin.1.4.31",
-    "minecraft": "^1.16.5"
+    "fabric-language-kotlin": ">=1.6.0+kotlin.1.5.0",
+    "minecraft": ">=1.17"
   }
 }

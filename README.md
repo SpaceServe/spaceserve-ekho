@@ -3,19 +3,22 @@
 ## Usage
 
 ### 1. Add to your project
-```groovy
-// build.gradle
+```kotlin
 repositories {
-    maven { url = "https://jitpack.io" }
+    maven { 
+        name = "JitPack"
+        url = "https://jitpack.io"
+    }
 }
 
 dependencies {
     // Ekho
-    modImplementation "com.github.SpaceServe:spaceserve-ekho:0.3.0"
-    include "com.github.SpaceServe:spaceserve-ekho:0.3.0"
+    modImplementation("com.github.SpaceServe:spaceserve-ekho:0.3.1")
+    include("com.github.SpaceServe:spaceserve-ekho:0.3.1")
 }
 ```
+### 2. ???
 
-### 2. Profit
+### 3. Profit
 
 #### [Wiki](https://github.com/SpaceServe/spaceserve-ekho/wiki)
